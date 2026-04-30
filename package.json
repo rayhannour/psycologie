@@ -9,16 +9,28 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@heygen/liveavatar-web-sdk": "^0.0.17",
+    "@heygen/streaming-avatar": "^2.1.0",
+    "firebase": "^12.12.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.14.0",
     "next": "16.2.4",
+    "primeicons": "^7.0.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "postcss": "^8.5.12",
+    "tailwindcss": "^4.2.4",
     "typescript": "^5"
   }
 }
