@@ -34,7 +34,7 @@ export function TranscriptHistory({
 }: TranscriptHistoryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isListening, setIsListening] = useState(false);
-  const [lang, setLang] = useState<'fr-FR' | 'ar-TN'>('fr-FR');
+  const [lang, setLang] = useState<'fr-FR' | 'ar-TN'>('ar-TN');
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
