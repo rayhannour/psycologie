@@ -212,7 +212,7 @@ export default function WorkflowSection() {
           <div>
             <p className="text-[10px] font-mono text-primary tracking-[0.4em] uppercase mb-2">Conformité & Sécurité</p>
             <p className="text-xl md:text-3xl font-black text-white">Toutes les données sont chiffrées <span className="text-primary">AES-512</span></p>
-            <p className="text-sm text-white/30 mt-2 font-light">Conformité HDS · RGPD · ISO 27001 · Hébergement France</p>
+            <p className="text-sm text-white/30 mt-2 font-light">Conformité HDS · RGPD · ISO 27001 · Hébergement Tunisie</p>
           </div>
           <div className="flex flex-wrap gap-3 md:gap-4 justify-center md:justify-end">
             {['HDS Certifié', 'RGPD', 'ISO 27001', 'HL7 FHIR'].map((cert) => (

@@ -168,7 +168,7 @@ export default function HeroSection() {
         {/* Description */}
         <div className="relative mt-4 max-w-4xl mx-auto">
           <motion.p className="relative z-10 text-lg sm:text-xl md:text-[1.8rem] text-white font-black leading-[1.1] flex flex-wrap gap-x-[0.2em] justify-center text-center px-4 tracking-tight">
-            {['Le', 'CGPR', 'fusionne', 'l\'analyse', 'clinique', 'profonde', 'avec', 'une', 'IA', 'autonome', 'dédiée', 'à', 'la', 'santé', 'mentale.'].map((w, wi) => (
+            {['Le', 'CGPR', 'fusionne', 'l\'analyse', 'clinique', 'profonde', 'avec', 'une', 'IA', 'autonome', 'dédiée', 'aux', 'agents', 'officiers.'].map((w, wi) => (
               <span key={wi} className="relative flex whitespace-nowrap">
                 {w.split('').map((c, ci) => (
                   <motion.span key={ci}

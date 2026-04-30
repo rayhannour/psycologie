@@ -62,7 +62,7 @@ export default function HardwareSection() {
                 <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
                 <span className="text-secondary font-mono text-[10px] font-black tracking-[0.4em] uppercase">CGPR_NEURAL_LINK_STABLE</span>
               </div>
-              <h4 className="text-xl md:text-3xl font-black text-white italic tracking-tighter uppercase">Réseau HDS France — Cluster Principal</h4>
+              <h4 className="text-xl md:text-3xl font-black text-white italic tracking-tighter uppercase">Réseau HDS Tunisie — Cluster Principal</h4>
             </div>
             <div className="grid grid-cols-2 md:flex md:flex-wrap gap-4 md:gap-12">
               {[

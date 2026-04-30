@@ -39,10 +39,13 @@ function ShowcaseSection() {
         className="relative w-full max-w-6xl aspect-video rounded-3xl md:rounded-[3rem] overflow-hidden border border-primary/20 bg-white/[0.02] shadow-[0_40px_100px_rgba(0,229,255,0.15)] group">
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,229,255,0.1)] z-10 pointer-events-none rounded-[3rem]" />
-        <Image src="/hero.png" alt="Interface CGPR" fill className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" />
+        <Image src="/tunisia_map.png" alt="Empreinte Tunisie CGPR" fill className="object-cover opacity-80 mix-blend-screen group-hover:scale-105 transition-transform duration-1000" />
         <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="w-20 h-20 bg-black/50 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.3)] group-hover:scale-110 transition-transform">
-            <i className="pi pi-play text-white text-3xl ml-2" />
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-20 h-20 bg-black/50 backdrop-blur-md rounded-full border border-primary/40 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.3)] group-hover:scale-110 transition-transform">
+              <i className="pi pi-map text-primary text-3xl animate-pulse" />
+            </div>
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-white/70 bg-black/40 px-4 py-1 rounded-full backdrop-blur-sm border border-white/10">Réseau National</span>
           </div>
         </div>
       </motion.div>
@@ -52,20 +55,25 @@ function ShowcaseSection() {
 
 // ── Ticker / Logo Bar ─────────────────────────────────────────
 function TickerSection() {
-  const partners = ['INSERM', 'CNRS', 'HAS France', 'CHU Paris', 'APHP', 'ANAP', 'FNS Clinique', 'INRIA Santé'];
+  const prisons = [
+    'Prison de Mornaguia', 'Prison de Borj Erroumi', 'Prison de Messadine', 
+    'Centre d\'Observation de Tunis', 'Prison de Harboub', 'Prison de Mahdia', 
+    'Prison de Sfax', 'Prison de Siliana', 'Centre de Rééducation d\'El Mourouj', 
+    'Prison de Kasserine', 'Prison de Nadhour'
+  ];
   return (
     <section className="py-10 md:py-20 bg-white/[0.02] border-b border-white/5 relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10" />
       <div className="max-w-7xl mx-auto relative z-20">
-        <p className="text-center text-[10px] font-mono tracking-[0.4em] text-primary uppercase mb-8 animate-pulse font-bold">Partenaires Institutionnels</p>
+        <p className="text-center text-[10px] font-mono tracking-[0.4em] text-primary uppercase mb-8 animate-pulse font-bold">Empreinte Tunisie — Unités Pénitentiaires et de Rééducation</p>
         <div className="flex overflow-hidden w-full select-none">
-          <motion.div animate={{ x: [0, -1200] }} transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+          <motion.div animate={{ x: [0, -2500] }} transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
             className="flex flex-none gap-24 items-center whitespace-nowrap px-12">
-            {[...partners, ...partners].map((p, i) => (
+            {[...prisons, ...prisons].map((p, i) => (
               <div key={i} className="flex items-center gap-6 group/logo">
                 <div className="w-2 h-2 bg-primary rounded-full group-hover/logo:scale-150 transition-transform shadow-[0_0_10px_#00e5ff]" />
-                <span className="text-3xl font-black tracking-tighter text-white opacity-30 group-hover/logo:opacity-100 group-hover/logo:text-primary transition-all duration-300">{p}</span>
-                <span className="text-xs font-mono text-white/20 font-light">CORE.STREAM</span>
+                <span className="text-3xl font-black tracking-tighter text-white opacity-40 group-hover/logo:opacity-100 group-hover/logo:text-primary transition-all duration-300">{p}</span>
+                <span className="text-xs font-mono text-white/20 font-light">CGPR.NODE</span>
               </div>
             ))}
           </motion.div>
@@ -156,16 +164,21 @@ function DashboardSection() {
             Ne regardez pas votre infrastructure, orchestrez-la. Le centre de commandement du CGPR transforme des millions d'interactions en alertes actionnables.
           </motion.p>
           <motion.ul variants={stagger} className="flex flex-col gap-3 md:gap-6 mt-6 text-sm md:text-lg text-white">
-            {['Temps de réaction en millisecondes.', 'Graphes de topologie neuronale visuelle.', 'Guérison proactive de la bande passante.'].map((t, i) => (
+            {['Temps de réaction en millisecondes.', 'Graphes de topologie neuronale visuelle.', 'Guérison proactive de la bande passante.', 'Relais humain instantané sécurisé via MS Teams.'].map((t, i) => (
               <motion.li key={i} variants={fadeUp} className="flex items-center gap-5 bg-white/[0.03] p-4 rounded-xl border border-white/5">
                 <i className="pi pi-check-circle text-primary text-2xl" /> {t}
               </motion.li>
             ))}
           </motion.ul>
-          <motion.div variants={fadeUp} className="mt-8">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-col md:flex-row items-center gap-6">
             <Link href="/dashboard">
               <button className="border-b-2 border-primary text-primary hover:text-cyan-300 hover:border-cyan-300 transition-colors pb-2 w-fit font-mono text-base tracking-widest uppercase flex items-center gap-3 font-semibold">
                 Accéder au Tableau de Bord <i className="pi pi-arrow-right text-sm" />
+              </button>
+            </Link>
+            <Link href="/dashboard/teams">
+              <button className="border-b-2 border-[#5558EB] text-[#5558EB] hover:text-indigo-400 hover:border-indigo-400 transition-colors pb-2 w-fit font-mono text-base tracking-widest uppercase flex items-center gap-3 font-semibold">
+                <i className="pi pi-video text-sm" /> Lancer Consultation Teams
               </button>
             </Link>
           </motion.div>

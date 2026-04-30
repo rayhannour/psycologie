@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Send, Play, Square } from 'lucide-react';
+import { MessageSquare, Send, Play, Square, Mic } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
@@ -33,6 +33,46 @@ export function TranscriptHistory({
   isSessionActive
 }: TranscriptHistoryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = 'fr-FR';
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        onInputChange(transcript);
+      };
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, [onInputChange]);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Microphone access error:", e);
+      }
+    }
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -79,17 +119,26 @@ export function TranscriptHistory({
               value={inputText}
               onChange={(e) => onInputChange(e.target.value)}
               placeholder="Posez une question à l'assistant..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-6 pr-12 outline-none focus:border-primary transition-colors text-sm"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-6 pr-24 outline-none focus:border-primary transition-colors text-sm"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') onSendMessage();
               }}
             />
-            <button 
-              onClick={onSendMessage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-white transition-colors"
-            >
-              <Send className="w-5 h-5" />
-            </button>
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <button 
+                onClick={toggleListening}
+                className={`p-2 rounded-full transition-colors ${isListening ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/10 text-white/50 hover:text-white'}`}
+                title="Saisie Vocale"
+              >
+                <Mic className={`w-5 h-5 ${isListening ? 'animate-pulse' : ''}`} />
+              </button>
+              <button 
+                onClick={onSendMessage}
+                className="p-2 rounded-full text-primary hover:bg-primary/10 transition-colors"
+              >
+                <Send className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 

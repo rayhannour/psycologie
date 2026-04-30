@@ -13,7 +13,8 @@ import {
   BrainCircuit,
   Search,
   Menu,
-  X
+  X,
+  Video
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -21,6 +22,7 @@ const sidebarItems = [
   { icon: Users, label: "Patients", href: "/dashboard/patients" },
   { icon: Calendar, label: "Agenda", href: "/dashboard/calendar" },
   { icon: MessageSquare, label: "Sessions IA", href: "/dashboard/sessions" },
+  { icon: Video, label: "Séances Teams", href: "/dashboard/teams" },
   { icon: BrainCircuit, label: "Analyses", href: "/dashboard/analytics" },
   { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },
 ];
