@@ -238,6 +238,7 @@ function Footer() {
 export default function HomePage() {
   return (
     <div className="flex flex-col text-white w-full overflow-hidden relative z-10 bg-black min-h-screen">
+      <audio src="/calm.mp3" autoPlay loop className="hidden" />
       <HeroSection />
       <ShowcaseSection />
       <TickerSection />
