@@ -34,6 +34,7 @@ export function TranscriptHistory({
 }: TranscriptHistoryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isListening, setIsListening] = useState(false);
+  const [lang, setLang] = useState<'fr-FR' | 'ar-TN'>('fr-FR');
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -43,10 +44,16 @@ export function TranscriptHistory({
         recognitionRef.current = new SpeechRecognition();
         recognitionRef.current.continuous = false;
         recognitionRef.current.interimResults = false;
-        recognitionRef.current.lang = 'fr-FR';
+        recognitionRef.current.lang = lang;
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = lang;
+    }
+  }, [lang]);
 
   useEffect(() => {
     if (recognitionRef.current) {
@@ -118,13 +125,20 @@ export function TranscriptHistory({
               type="text"
               value={inputText}
               onChange={(e) => onInputChange(e.target.value)}
-              placeholder="Posez une question à l'assistant..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-6 pr-24 outline-none focus:border-primary transition-colors text-sm"
+              placeholder={lang === 'fr-FR' ? "Posez une question à l'assistant..." : "اكتب سؤالك للمساعد..."}
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-6 pr-32 outline-none focus:border-primary transition-colors text-sm"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') onSendMessage();
               }}
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <button
+                onClick={() => setLang(lang === 'fr-FR' ? 'ar-TN' : 'fr-FR')}
+                className="text-[10px] font-mono font-bold text-secondary hover:text-white transition-colors px-2 py-1 bg-white/5 rounded-md border border-white/10"
+                title="Changer la langue (FR/AR)"
+              >
+                {lang === 'fr-FR' ? 'FR' : 'AR'}
+              </button>
               <button 
                 onClick={toggleListening}
                 className={`p-2 rounded-full transition-colors ${isListening ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/10 text-white/50 hover:text-white'}`}
