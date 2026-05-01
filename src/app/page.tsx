@@ -33,21 +33,40 @@ function SplitDivider({ label }: { label: string }) {
 
 // ── Video / Image Showcase ────────────────────────────────────
 function ShowcaseSection() {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
     <section className="w-full relative px-4 sm:px-8 md:px-12 py-16 -mt-10 md:-mt-20 z-40 flex justify-center">
       <motion.div initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: 'easeOut' }} viewport={{ once: true, margin: '-100px' }}
-        className="relative w-full max-w-6xl aspect-video rounded-3xl md:rounded-[3rem] overflow-hidden border border-primary/20 bg-white/[0.02] shadow-[0_40px_100px_rgba(0,229,255,0.15)] group">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,229,255,0.1)] z-10 pointer-events-none rounded-[3rem]" />
-        <Image src="/tunisia_map.png" alt="Empreinte Tunisie CGPR" fill className="object-cover opacity-80 mix-blend-screen group-hover:scale-105 transition-transform duration-1000" />
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-20 h-20 bg-black/50 backdrop-blur-md rounded-full border border-primary/40 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.3)] group-hover:scale-110 transition-transform">
-              <i className="pi pi-map text-primary text-3xl animate-pulse" />
+        className="relative w-full max-w-6xl aspect-video rounded-3xl md:rounded-[3rem] overflow-hidden border border-primary/20 bg-white/[0.02] shadow-[0_40px_100px_rgba(0,229,255,0.15)] group cursor-pointer"
+        onClick={() => setIsPlaying(true)}
+      >
+        {!isPlaying ? (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,229,255,0.1)] z-10 pointer-events-none rounded-[3rem]" />
+            <Image src="/tunisia_map.png" alt="Empreinte Tunisie CGPR" fill className="object-cover opacity-80 mix-blend-screen group-hover:scale-105 transition-transform duration-1000" />
+            <div className="absolute inset-0 flex items-center justify-center z-20">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-20 h-20 bg-black/50 backdrop-blur-md rounded-full border border-primary/40 flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.3)] group-hover:scale-110 transition-transform">
+                  <i className="pi pi-play text-primary text-3xl ml-2 animate-pulse" />
+                </div>
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-white/70 bg-black/40 px-4 py-1 rounded-full backdrop-blur-sm border border-white/10">Gestion du Stress</span>
+              </div>
             </div>
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-white/70 bg-black/40 px-4 py-1 rounded-full backdrop-blur-sm border border-white/10">Réseau National</span>
-          </div>
-        </div>
+          </>
+        ) : (
+          <iframe 
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/RcGyVTAoXEU?autoplay=1" 
+            title="Psychologie : Gestion du Stress" 
+            frameBorder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowFullScreen
+            className="absolute inset-0 w-full h-full z-30"
+          />
+        )}
       </motion.div>
     </section>
   );
