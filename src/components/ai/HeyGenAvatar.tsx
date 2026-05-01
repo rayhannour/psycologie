@@ -23,6 +23,14 @@ export const HeyGenAvatar = forwardRef<HeyGenAvatarHandle, {
   const mediaStream = useRef<HTMLVideoElement>(null);
   const avatar = useRef<any>(null);
 
+  useEffect(() => {
+    return () => {
+      if (avatar.current) {
+        avatar.current.stop().catch((err: any) => console.error("Failed to stop session on unmount:", err));
+      }
+    };
+  }, []);
+
   async function fetchAccessToken() {
     const res = await fetch("/api/get-access-token", { method: "POST" });
     const data = await res.json();
