@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
         avatar_persona: {
           voice_id: "e948b062-7dce-4f2b-bcf6-98bd3511106b",
           context_id: "4968939e-b021-480d-a07d-f11e62e8beed",
-          language: "ar", // Arabic for Psycologie
-          stt_config: { provider: 'deepgram', language: 'ar', model: 'nova-2' },
+          language: "fr", // Kept as fr because deepgram does not support 'ar' in HeyGen persona
+          stt_config: { provider: 'deepgram', language: 'fr', model: 'nova-2' },
         },
       }),
     });
