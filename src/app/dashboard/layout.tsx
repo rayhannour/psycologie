@@ -33,7 +33,7 @@ const allItems = [
 
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function DashboardLayout({
   children,
@@ -128,9 +128,19 @@ export default function DashboardLayout({
             onClick={async () => {
               if (user) {
                 const newRole = role === 'agent' ? 'doctor' : 'agent';
-                await updateDoc(doc(db, "users", user.uid), { role: newRole });
+                
+                // 1. Mise à jour immédiate du cache local (fonctionne même hors-ligne)
                 localStorage.setItem(`cgpr_role_${user.uid}`, newRole);
-                window.location.reload(); // Reload to apply context change
+                
+                // 2. Tentative de mise à jour Firestore (optionnel si hors-ligne)
+                try {
+                  await setDoc(doc(db, "users", user.uid), { role: newRole }, { merge: true });
+                } catch (e) {
+                  console.warn("Firestore update failed, but localStorage updated:", e);
+                }
+                
+                // 3. Rechargement pour appliquer le changement
+                window.location.reload();
               }
             }}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-primary/70 hover:bg-primary/10 hover:text-primary transition-all cursor-pointer group border border-primary/10"
