@@ -8,9 +8,35 @@ import {
 import { useState } from 'react';
 
 export default function TeamsPage() {
-  // En production, ce token et cette URL seraient générés via l'API côté serveur
   const [token, setToken] = useState("");
-  const serverUrl = "wss://your-livekit-server.livekit.cloud";
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  
+  // L'URL du serveur LiveKit (wss://...)
+  const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL || "wss://your-livekit-server.livekit.cloud";
+
+  const handleJoin = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      // On tente de récupérer un vrai token depuis notre nouvelle API
+      const resp = await fetch(`/api/get-livekit-token?room=psychologie-session&username=Agent_${Math.floor(Math.random() * 1000)}`);
+      const data = await resp.json();
+      
+      if (data.token) {
+        setToken(data.token);
+      } else {
+        // Si pas de token (ex: credentials manquants), on bascule en mode simulation
+        console.warn("LiveKit credentials missing, falling back to simulation mode");
+        setToken("simulate-token-for-ui");
+      }
+    } catch (e) {
+      console.error("Failed to fetch LiveKit token:", e);
+      setToken("simulate-token-for-ui");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!token) {
     return (
@@ -22,12 +48,20 @@ export default function TeamsPage() {
         <p className="text-secondary max-w-md mb-8 font-light leading-relaxed">
           Espace sécurisé de communication avec les psychologues agréés. L'infrastructure vidéo repose sur le protocole WebRTC de LiveKit.
         </p>
+        
+        {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
+
         <button 
-          onClick={() => setToken("simulate-token-for-ui")} 
-          className="px-8 py-4 bg-gradient-to-r from-[#5558EB] to-[#7173e6] rounded-2xl text-white font-bold tracking-widest uppercase text-sm hover:shadow-[0_0_30px_rgba(85,88,235,0.6)] hover:-translate-y-1 transition-all flex items-center gap-3"
+          onClick={handleJoin}
+          disabled={isLoading}
+          className="px-8 py-4 bg-gradient-to-r from-[#5558EB] to-[#7173e6] rounded-2xl text-white font-bold tracking-widest uppercase text-sm hover:shadow-[0_0_30px_rgba(85,88,235,0.6)] hover:-translate-y-1 transition-all flex items-center gap-3 disabled:opacity-50"
         >
-          <i className="pi pi-lock text-white/70" />
-          Initialiser Session LiveKit
+          {isLoading ? (
+            <i className="pi pi-spin pi-spinner" />
+          ) : (
+            <i className="pi pi-lock text-white/70" />
+          )}
+          {isLoading ? "Initialisation..." : "Initialiser Session LiveKit"}
         </button>
       </div>
     );
@@ -75,6 +109,7 @@ export default function TeamsPage() {
             audio={true}
             token={token}
             serverUrl={serverUrl}
+            connect={true}
             data-lk-theme="default"
             className="w-full h-full"
             onDisconnected={() => setToken("")}
@@ -84,7 +119,7 @@ export default function TeamsPage() {
           </LiveKitRoom>
         )}
         
-        {/* Mockup Overlay if connect is false (since token is fake) */}
+        {/* Mockup Overlay if simulate token */}
         {token === "simulate-token-for-ui" && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-6 text-center">
             <i className="pi pi-spin pi-spinner text-4xl text-[#5558EB] mb-6" />
@@ -92,7 +127,7 @@ export default function TeamsPage() {
               En attente de connexion au serveur LiveKit. 
             </p>
             <p className="text-white/50 text-xs max-w-md">
-              (Le code d'intégration complet LiveKitRoom est prêt dans `page.tsx`. Remplacez `simulate-token-for-ui` par un vrai jeton JWT pour activer le flux vidéo WebRTC réel).
+              (Le serveur n'est pas encore configuré. Ajoutez vos clés LIVEKIT dans le fichier .env pour activer la vidéo réelle).
             </p>
           </div>
         )}
