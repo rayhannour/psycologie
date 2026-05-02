@@ -21,6 +21,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [role, setRole] = useState<'agent' | 'doctor'>('agent');
   const [loading, setLoading] = useState(true);
 
+  // Initial load of role from localStorage to prevent flicker
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = auth.currentUser;
+      if (storedUser) {
+        const cached = localStorage.getItem(`cgpr_role_${storedUser.uid}`);
+        if (cached === 'doctor' || cached === 'agent') {
+          setRole(cached as 'agent' | 'doctor');
+        }
+      }
+    }
+  }, []);
+
   const applyEmailFallback = (user: User | null) => {
     // 1. Check LocalStorage first (persistent choice)
     const cachedRole = user ? localStorage.getItem(`cgpr_role_${user.uid}`) : null;
@@ -38,23 +51,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
       
-      if (user) {
+      if (firebaseUser) {
+        // Immediate fallback to localStorage while waiting for Firestore
+        const cached = localStorage.getItem(`cgpr_role_${firebaseUser.uid}`);
+        if (cached === 'doctor' || cached === 'agent') {
+          console.log("AuthContext: Loaded cached role:", cached);
+          setRole(cached as 'agent' | 'doctor');
+        }
+
         try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
+          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
           if (userDoc.exists()) {
             const fetchedRole = userDoc.data().role as 'agent' | 'doctor';
+            console.log("AuthContext: Fetched role from Firestore:", fetchedRole);
             setRole(fetchedRole);
-            localStorage.setItem(`cgpr_role_${user.uid}`, fetchedRole); // Update cache
+            localStorage.setItem(`cgpr_role_${firebaseUser.uid}`, fetchedRole);
           } else {
-            // Fallback for existing users or those without a firestore doc
-            applyEmailFallback(user);
+            console.log("AuthContext: No Firestore doc, applying fallback");
+            applyEmailFallback(firebaseUser);
           }
         } catch (error) {
-          console.error("Error fetching user role, applying fallback:", error);
-          applyEmailFallback(user);
+          console.error("AuthContext: Firestore error, applying fallback:", error);
+          applyEmailFallback(firebaseUser);
         }
       }
       
