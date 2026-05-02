@@ -21,6 +21,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [role, setRole] = useState<'agent' | 'doctor'>('agent');
   const [loading, setLoading] = useState(true);
 
+  const applyEmailFallback = (user: User | null) => {
+    if (user?.email?.toLowerCase().includes('doctor')) {
+      setRole('doctor');
+    } else {
+      setRole('agent');
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
@@ -32,14 +40,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setRole(userDoc.data().role as 'agent' | 'doctor');
           } else {
             // Fallback for existing users or those without a firestore doc
-            if (user?.email?.toLowerCase().includes('doctor')) {
-              setRole('doctor');
-            } else {
-              setRole('agent');
-            }
+            applyEmailFallback(user);
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
+          console.error("Error fetching user role, applying fallback:", error);
+          applyEmailFallback(user);
         }
       }
       
