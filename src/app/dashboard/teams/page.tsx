@@ -51,27 +51,51 @@ export default function TeamsPage() {
 
       {/* LiveKit Video Conference UI */}
       <div className="flex-1 bg-black relative" style={{ minHeight: "60vh" }}>
-        <LiveKitRoom
-          video={true}
-          audio={true}
-          token={token}
-          serverUrl={serverUrl}
-          connect={false} // Prevent actual connection error for this UI mockup
-          data-lk-theme="default"
-          className="w-full h-full"
-          onDisconnected={() => setToken("")}
-        >
-          <VideoConference />
-          <RoomAudioRenderer />
-        </LiveKitRoom>
+        {token === "simulate-token-for-ui" ? (
+          <div className="w-full h-full flex flex-col relative bg-[#111]">
+            <div className="flex-1 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-[#222] rounded-xl flex items-center justify-center border border-white/5 relative overflow-hidden">
+                <i className="pi pi-user text-white/20 text-6xl" />
+                <span className="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded text-xs">Psychologue (Vous)</span>
+              </div>
+              <div className="bg-[#222] rounded-xl flex items-center justify-center border border-white/5 relative overflow-hidden">
+                <i className="pi pi-user text-white/20 text-6xl" />
+                <span className="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded text-xs">Patient / Agent</span>
+              </div>
+            </div>
+            <div className="h-16 bg-[#1a1a1a] flex items-center justify-center gap-4 border-t border-white/10">
+               <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20"><i className="pi pi-microphone text-white" /></button>
+               <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20"><i className="pi pi-video text-white" /></button>
+               <button onClick={() => setToken("")} className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600"><i className="pi pi-phone text-white" /></button>
+            </div>
+          </div>
+        ) : (
+          <LiveKitRoom
+            video={true}
+            audio={true}
+            token={token}
+            serverUrl={serverUrl}
+            data-lk-theme="default"
+            className="w-full h-full"
+            onDisconnected={() => setToken("")}
+          >
+            <VideoConference />
+            <RoomAudioRenderer />
+          </LiveKitRoom>
+        )}
         
         {/* Mockup Overlay if connect is false (since token is fake) */}
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-6 text-center">
-           <i className="pi pi-spin pi-spinner text-4xl text-[#5558EB] mb-6" />
-           <p className="text-white font-mono text-sm tracking-widest uppercase max-w-md">
-             En attente de connexion au serveur LiveKit. (Ceci est l'intégration de base. Insérez votre vrai Jeton et URL LiveKit en production).
-           </p>
-        </div>
+        {token === "simulate-token-for-ui" && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-6 text-center">
+            <i className="pi pi-spin pi-spinner text-4xl text-[#5558EB] mb-6" />
+            <p className="text-white font-mono text-sm tracking-widest uppercase max-w-md mb-4">
+              En attente de connexion au serveur LiveKit. 
+            </p>
+            <p className="text-white/50 text-xs max-w-md">
+              (Le code d'intégration complet LiveKitRoom est prêt dans `page.tsx`. Remplacez `simulate-token-for-ui` par un vrai jeton JWT pour activer le flux vidéo WebRTC réel).
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
