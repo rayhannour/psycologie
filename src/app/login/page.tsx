@@ -26,24 +26,29 @@ export default function LoginPage() {
     try {
       if (isRegistering) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // Save role to Firestore
+        // Save role to Firestore and LocalStorage
         await setDoc(doc(db, "users", userCredential.user.uid), {
           email: email,
           role: role,
           createdAt: new Date().toISOString()
         });
+        localStorage.setItem(`cgpr_role_${userCredential.user.uid}`, role);
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         // If user has no role in Firestore, assign the one from UI
         const userRef = doc(db, "users", userCredential.user.uid);
         const userDoc = await getDoc(userRef);
+        let finalRole = role;
         if (!userDoc.exists()) {
           await setDoc(userRef, {
             email: email,
             role: role,
             createdAt: new Date().toISOString()
           });
+        } else {
+          finalRole = userDoc.data().role;
         }
+        localStorage.setItem(`cgpr_role_${userCredential.user.uid}`, finalRole);
       }
       router.push('/dashboard');
     } catch (err: any) {
@@ -67,13 +72,17 @@ export default function LoginPage() {
       // If user has no role in Firestore, assign the one from UI
       const userRef = doc(db, "users", userCredential.user.uid);
       const userDoc = await getDoc(userRef);
+      let finalRole = role;
       if (!userDoc.exists()) {
         await setDoc(userRef, {
           email: userCredential.user.email,
           role: role,
           createdAt: new Date().toISOString()
         });
+      } else {
+        finalRole = userDoc.data().role;
       }
+      localStorage.setItem(`cgpr_role_${userCredential.user.uid}`, finalRole);
       router.push('/dashboard');
     } catch (err: any) {
       setError("Échec de la connexion avec Google.");

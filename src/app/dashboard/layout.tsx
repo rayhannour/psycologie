@@ -129,6 +129,7 @@ export default function DashboardLayout({
               if (user) {
                 const newRole = role === 'agent' ? 'doctor' : 'agent';
                 await updateDoc(doc(db, "users", user.uid), { role: newRole });
+                localStorage.setItem(`cgpr_role_${user.uid}`, newRole);
                 window.location.reload(); // Reload to apply context change
               }
             }}

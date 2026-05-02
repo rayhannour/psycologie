@@ -22,6 +22,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const applyEmailFallback = (user: User | null) => {
+    // 1. Check LocalStorage first (persistent choice)
+    const cachedRole = user ? localStorage.getItem(`cgpr_role_${user.uid}`) : null;
+    if (cachedRole === 'doctor' || cachedRole === 'agent') {
+      setRole(cachedRole);
+      return;
+    }
+
+    // 2. Fallback to email detection
     if (user?.email?.toLowerCase().includes('doctor')) {
       setRole('doctor');
     } else {
@@ -37,7 +45,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
-            setRole(userDoc.data().role as 'agent' | 'doctor');
+            const fetchedRole = userDoc.data().role as 'agent' | 'doctor';
+            setRole(fetchedRole);
+            localStorage.setItem(`cgpr_role_${user.uid}`, fetchedRole); // Update cache
           } else {
             // Fallback for existing users or those without a firestore doc
             applyEmailFallback(user);
