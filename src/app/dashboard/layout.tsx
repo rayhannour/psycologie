@@ -44,6 +44,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const { user, role, loading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [switchError, setSwitchError] = useState("");
 
   // Filter items based on role
   const sidebarItems = allItems.filter(item => item.roles.includes(role));
@@ -122,31 +124,49 @@ export default function DashboardLayout({
         </nav>
 
         <div className="p-4 border-t border-white/5 space-y-2">
+          {switchError && (
+            <p className="text-[10px] text-red-400 px-2 animate-pulse font-bold uppercase">{switchError}</p>
+          )}
           <motion.button
             whileHover={{ scale: 1.02, x: 2 }}
             whileTap={{ scale: 0.96 }}
+            disabled={isSwitching}
             onClick={async () => {
               if (user) {
+                setIsSwitching(true);
+                setSwitchError("");
                 const newRole = role === 'agent' ? 'doctor' : 'agent';
                 
-                // 1. Mise à jour immédiate du cache local (fonctionne même hors-ligne)
-                localStorage.setItem(`cgpr_role_${user.uid}`, newRole);
-                
-                // 2. Tentative de mise à jour Firestore (optionnel si hors-ligne)
                 try {
-                  await setDoc(doc(db, "users", user.uid), { role: newRole }, { merge: true });
+                  // 1. Mise à jour immédiate du cache local
+                  localStorage.setItem(`cgpr_role_${user.uid}`, newRole);
+                  
+                  // 2. Tentative de mise à jour Firestore (timeout de 3s pour éviter la lourdeur)
+                  const updatePromise = setDoc(doc(db, "users", user.uid), { role: newRole }, { merge: true });
+                  const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 3000));
+                  
+                  await Promise.race([updatePromise, timeoutPromise]).catch(e => {
+                    console.warn("Firestore update skipped or timed out, using local cache only.");
+                  });
+
+                  // 3. Rechargement
+                  window.location.reload();
                 } catch (e) {
-                  console.warn("Firestore update failed, but localStorage updated:", e);
+                  setSwitchError("Erreur de synchronisation");
+                  setIsSwitching(false);
                 }
-                
-                // 3. Rechargement pour appliquer le changement
-                window.location.reload();
               }
             }}
-            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-primary/70 hover:bg-primary/10 hover:text-primary transition-all cursor-pointer group border border-primary/10"
+            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-primary/70 hover:bg-primary/10 hover:text-primary transition-all cursor-pointer group border border-primary/10 disabled:opacity-50"
           >
-            <RefreshCw className="w-5 h-5 flex-shrink-0 group-hover:rotate-180 transition-transform duration-500" />
-            <span className="text-sm font-medium">Passer en mode {role === 'agent' ? 'Praticien' : 'Agent'}</span>
+            {isSwitching ? (
+              <RefreshCw className="w-5 h-5 flex-shrink-0 animate-spin" />
+            ) : (
+              <RefreshCw className="w-5 h-5 flex-shrink-0 group-hover:rotate-180 transition-transform duration-500" />
+            )}
+            <span className="text-sm font-medium">
+              {isSwitching ? "Changement..." : `Mode ${role === 'agent' ? 'Praticien' : 'Agent'}`}
+            </span>
           </motion.button>
 
           <motion.button
