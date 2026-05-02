@@ -17,14 +17,17 @@ import {
   Video
 } from 'lucide-react';
 
-const sidebarItems = [
-  { icon: LayoutDashboard, label: "Tableau de Bord", href: "/dashboard" },
-  { icon: Users, label: "Patients", href: "/dashboard/patients" },
-  { icon: Calendar, label: "Agenda", href: "/dashboard/calendar" },
-  { icon: MessageSquare, label: "Sessions IA", href: "/dashboard/sessions" },
-  { icon: Video, label: "Séances Teams", href: "/dashboard/teams" },
-  { icon: BrainCircuit, label: "Analyses", href: "/dashboard/analytics" },
-  { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },
+// Define all possible items
+const allItems = [
+  { icon: LayoutDashboard, label: "Tableau de Bord", href: "/dashboard", roles: ['doctor'] },
+  { icon: Users, label: "Patients", href: "/dashboard/patients", roles: ['doctor'] },
+  { icon: Calendar, label: "Agenda", href: "/dashboard/calendar", roles: ['agent', 'doctor'] },
+  { icon: MessageSquare, label: "Assistant IA", href: "/dashboard/sessions", roles: ['agent'] },
+  { icon: MessageSquare, label: "Suivi IA", href: "/dashboard/sessions", roles: ['doctor'] },
+  { icon: Video, label: "Assistant Team", href: "/dashboard/teams", roles: ['agent'] },
+  { icon: Video, label: "Séances Teams", href: "/dashboard/teams", roles: ['doctor'] },
+  { icon: BrainCircuit, label: "Analyses", href: "/dashboard/analytics", roles: ['doctor'] },
+  { icon: Settings, label: "Paramètres", href: "/dashboard/settings", roles: ['doctor'] },
 ];
 
 import { useAuth } from '@/context/AuthContext';
@@ -36,8 +39,11 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Filter items based on role
+  const sidebarItems = allItems.filter(item => item.roles.includes(role));
 
   useEffect(() => {
     if (!loading && !user) {
