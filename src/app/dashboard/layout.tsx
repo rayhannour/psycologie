@@ -14,7 +14,8 @@ import {
   Search,
   Menu,
   X,
-  Video
+  Video,
+  RefreshCw
 } from 'lucide-react';
 
 // Define all possible items
@@ -31,6 +32,8 @@ const allItems = [
 ];
 
 import { useAuth } from '@/context/AuthContext';
+import { db } from '@/lib/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export default function DashboardLayout({
   children,
@@ -118,7 +121,23 @@ export default function DashboardLayout({
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/5 space-y-2">
+          <motion.button
+            whileHover={{ scale: 1.02, x: 2 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={async () => {
+              if (user) {
+                const newRole = role === 'agent' ? 'doctor' : 'agent';
+                await updateDoc(doc(db, "users", user.uid), { role: newRole });
+                window.location.reload(); // Reload to apply context change
+              }
+            }}
+            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-primary/70 hover:bg-primary/10 hover:text-primary transition-all cursor-pointer group border border-primary/10"
+          >
+            <RefreshCw className="w-5 h-5 flex-shrink-0 group-hover:rotate-180 transition-transform duration-500" />
+            <span className="text-sm font-medium">Passer en mode {role === 'agent' ? 'Praticien' : 'Agent'}</span>
+          </motion.button>
+
           <motion.button
             whileHover={{ scale: 1.02, x: 2 }}
             whileTap={{ scale: 0.96 }}

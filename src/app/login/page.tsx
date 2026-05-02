@@ -33,7 +33,17 @@ export default function LoginPage() {
           createdAt: new Date().toISOString()
         });
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        // If user has no role in Firestore, assign the one from UI
+        const userRef = doc(db, "users", userCredential.user.uid);
+        const userDoc = await getDoc(userRef);
+        if (!userDoc.exists()) {
+          await setDoc(userRef, {
+            email: email,
+            role: role,
+            createdAt: new Date().toISOString()
+          });
+        }
       }
       router.push('/dashboard');
     } catch (err: any) {
@@ -53,7 +63,17 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     
     try {
-      await signInWithPopup(auth, provider);
+      const userCredential = await signInWithPopup(auth, provider);
+      // If user has no role in Firestore, assign the one from UI
+      const userRef = doc(db, "users", userCredential.user.uid);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) {
+        await setDoc(userRef, {
+          email: userCredential.user.email,
+          role: role,
+          createdAt: new Date().toISOString()
+        });
+      }
       router.push('/dashboard');
     } catch (err: any) {
       setError("Échec de la connexion avec Google.");
