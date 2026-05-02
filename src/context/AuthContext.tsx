@@ -1,7 +1,8 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 interface AuthContextType {
   user: User | null;
@@ -21,15 +22,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      // Logic: if email contains 'doctor', set role to 'doctor'
-      // This is a simple way for the user to test roles
-      if (user?.email?.toLowerCase().includes('doctor')) {
-        setRole('doctor');
-      } else {
-        setRole('agent');
+      
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            setRole(userDoc.data().role as 'agent' | 'doctor');
+          } else {
+            // Fallback for existing users or those without a firestore doc
+            if (user?.email?.toLowerCase().includes('doctor')) {
+              setRole('doctor');
+            } else {
+              setRole('agent');
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+        }
       }
+      
       setLoading(false);
     });
 

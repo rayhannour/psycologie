@@ -6,11 +6,14 @@ import { BrainCircuit, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { db } from '@/lib/firebase';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function LoginPage() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<'agent' | 'doctor'>('agent');
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -22,7 +25,13 @@ export default function LoginPage() {
     
     try {
       if (isRegistering) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // Save role to Firestore
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          email: email,
+          role: role,
+          createdAt: new Date().toISOString()
+        });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -82,6 +91,26 @@ export default function LoginPage() {
             {error}
           </motion.div>
         )}
+
+        {/* Role Selection */}
+        <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 mb-8">
+          <button
+            onClick={() => setRole('agent')}
+            className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all ${
+              role === 'agent' ? 'bg-primary text-black' : 'text-secondary hover:text-white'
+            }`}
+          >
+            Agent
+          </button>
+          <button
+            onClick={() => setRole('doctor')}
+            className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all ${
+              role === 'doctor' ? 'bg-primary text-black' : 'text-secondary hover:text-white'
+            }`}
+          >
+            Praticien
+          </button>
+        </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
