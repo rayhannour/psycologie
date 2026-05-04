@@ -1,10 +1,18 @@
 "use client";
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useConversation } from '@elevenlabs/react';
+import { useConversation, ConversationProvider } from '@elevenlabs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Volume2, Globe, Sparkles, Activity, Play, Download, Trash2 } from 'lucide-react';
 
 export default function ElevenLabsPage() {
+  return (
+    <ConversationProvider>
+      <ElevenLabsContent />
+    </ConversationProvider>
+  );
+}
+
+function ElevenLabsContent() {
   const [language, setLanguage] = useState<'fr' | 'ar'>('fr');
   const [activeTab, setActiveTab] = useState<'agent' | 'tts'>('agent');
   const [ttsText, setTtsText] = useState("");
