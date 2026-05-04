@@ -15,7 +15,8 @@ import {
   Menu,
   X,
   Video,
-  RefreshCw
+  RefreshCw,
+  Mic2
 } from 'lucide-react';
 
 // Define all possible items
@@ -27,6 +28,7 @@ const allItems = [
   { icon: MessageSquare, label: "Suivi IA", href: "/dashboard/sessions", roles: ['doctor'] },
   { icon: Video, label: "Assistant Team", href: "/dashboard/teams", roles: ['agent'] },
   { icon: Video, label: "Séances Teams", href: "/dashboard/teams", roles: ['doctor'] },
+  { icon: Mic2, label: "Assistant Vocal", href: "/dashboard/elevenlabs", roles: ['agent', 'doctor'] },
   { icon: BrainCircuit, label: "Analyses", href: "/dashboard/analytics", roles: ['doctor'] },
   { icon: Settings, label: "Paramètres", href: "/dashboard/settings", roles: ['doctor'] },
 ];
