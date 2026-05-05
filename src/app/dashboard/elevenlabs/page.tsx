@@ -32,12 +32,14 @@ function ElevenLabsContent() {
       // Request microphone access
       await navigator.mediaDevices.getUserMedia({ audio: true });
       
-      // In a real scenario, you'd fetch the signed URL from your API
-      // Using your real Agent ID
-      const agentId = "agent_8301kqvk1h4xfa096j8acw49d4ac"; 
+      // 1. Fetch the signed URL from our secure backend
+      const response = await fetch('/api/elevenlabs/signed-url');
+      if (!response.ok) throw new Error('Failed to get signed URL');
+      const { signed_url } = await response.json();
       
+      // 2. Start session using the signed URL
       await conversation.startSession({
-        agentId: agentId,
+        signedUrl: signed_url,
       });
     } catch (error) {
       console.error('Failed to start conversation:', error);
