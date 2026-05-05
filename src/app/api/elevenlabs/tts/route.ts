@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
-  const { text, language } = await request.json();
-
-  if (!apiKey) {
-    return NextResponse.json({ error: 'ElevenLabs API key missing' }, { status: 500 });
-  }
+  
   try {
+    const { text, language } = await request.json();
+
+    if (!apiKey) {
+      return NextResponse.json({ error: 'ElevenLabs API key missing' }, { status: 500 });
+    }
+
     let voiceId = 'pNInz6obpgDQGcFmaJgB'; // Default stable voice ID (Adam)
 
     // 1. Try to get the list of available voices (requires voices_read permission)
@@ -45,7 +47,6 @@ export async function POST(request: NextRequest) {
         },
       }),
     });
-    console.log("TTS Response status:", response.status);
 
     if (!response.ok) {
       const errData = await response.json();

@@ -8,7 +8,7 @@ export async function GET() {
   }
 
   try {
-    const response = await fetch('https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=Jp6A9Y9Q9r9v9w9v9v9v', { // Placeholder Agent ID
+    const response = await fetch('https://api.elevenlabs.io/v1/convai/conversation/get_signed_url?agent_id=8301kqvk1h4xfa096j8acw49d4ac', { // Real Agent ID (prefix removed if necessary)
       method: 'GET',
       headers: {
         'xi-api-key': apiKey,

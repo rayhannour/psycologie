@@ -33,8 +33,8 @@ function ElevenLabsContent() {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       
       // In a real scenario, you'd fetch the signed URL from your API
-      // For this demo, we'll explain to the user they need an Agent ID
-      const agentId = "Jp6A9Y9Q9r9v9w9v9v9v"; // Placeholder
+      // Using your real Agent ID
+      const agentId = "8301kqvk1h4xfa096j8acw49d4ac"; 
       
       await conversation.startSession({
         agentId: agentId,
