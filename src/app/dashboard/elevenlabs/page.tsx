@@ -86,7 +86,7 @@ function ElevenLabsContent() {
         <div>
           <h1 className="text-4xl font-black display-font mb-2 flex items-center gap-3">
             <Sparkles className="text-primary w-8 h-8" />
-            ELEVENLABS <span className="text-primary">AI</span>
+            Psy <span className="text-primary">AI</span>
           </h1>
           <p className="text-secondary text-lg font-light">Assistant vocal haute fidélité pour le support psychologique.</p>
         </div>
