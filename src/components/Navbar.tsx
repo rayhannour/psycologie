@@ -6,8 +6,8 @@ import { BrainCircuit, Menu, X } from 'lucide-react';
 
 const navLinks = [
   { href: '#features', label: 'Solutions', icon: 'pi-th-large' },
-  { href: '#ia',       label: 'Technologie', icon: 'pi-microchip' },
-  { href: '#pricing',  label: 'Tarification', icon: 'pi-tag' },
+  { href: '#ia', label: 'Technologie', icon: 'pi-microchip' },
+  { href: '#pricing', label: 'Workflows', icon: 'pi-tag' },
 ];
 
 export default function Navbar() {
@@ -27,11 +27,10 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 w-full z-50 transition-all duration-700 ${
-          scrolled
+        className={`fixed top-0 w-full z-50 transition-all duration-700 ${scrolled
             ? 'py-3 bg-black/60 backdrop-blur-2xl border-b border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.5)]'
             : 'py-5 bg-transparent'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
