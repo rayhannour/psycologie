@@ -34,7 +34,7 @@ function ElevenLabsContent() {
       
       // In a real scenario, you'd fetch the signed URL from your API
       // Using your real Agent ID
-      const agentId = "8301kqvk1h4xfa096j8acw49d4ac"; 
+      const agentId = "agent_8301kqvk1h4xfa096j8acw49d4ac"; 
       
       await conversation.startSession({
         agentId: agentId,
