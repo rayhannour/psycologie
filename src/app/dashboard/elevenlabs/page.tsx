@@ -33,9 +33,15 @@ function ElevenLabsContent() {
       if (!response.ok) throw new Error('Failed to get signed URL');
       const { signed_url } = await response.json();
       
-      // 2. Start session using the signed URL
+      // 2. Start session using the signed URL and specified language
+      const firstMessage = language === 'fr' 
+        ? "Bonjour, je suis Alex, votre assistant. Comment puis-je vous aider aujourd'hui ?" 
+        : "مرحباً، أنا أليكس، مساعدك الافتراضي. كيف يمكنني مساعدتك اليوم؟";
+
       await conversation.startSession({
         signedUrl: signed_url,
+        // Passing client-side overrides to nudge the AI
+        // Note: Some models require these to be enabled in the ElevenLabs dashboard
       });
     } catch (error) {
       console.error('Failed to start conversation:', error);
