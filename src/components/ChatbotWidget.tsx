@@ -69,8 +69,8 @@ export default function ChatbotWidget() {
 
       const data = await response.json();
       
-      // Handle different n8n response structures (assuming text or output key)
-      const botText = data.output || data.text || data.message || (Array.isArray(data) ? data[0].output : "Désolé, je n'ai pas pu traiter votre demande.");
+      // Handle different n8n response structures (specifically looking for "response" as requested)
+      const botText = data.response || data.output || data.text || data.message || (Array.isArray(data) ? (data[0].response || data[0].output) : "Désolé, je n'ai pas pu traiter votre demande.");
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
