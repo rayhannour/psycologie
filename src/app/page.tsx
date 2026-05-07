@@ -11,6 +11,7 @@ import CycleSection from '@/components/sections/CycleSection';
 import TelemetrySection from '@/components/sections/TelemetrySection';
 import HardwareSection from '@/components/sections/HardwareSection';
 import WorkflowSection from '@/components/sections/WorkflowSection';
+import ChatbotWidget from '@/components/ChatbotWidget';
 
 const stagger: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.15 } } };
 const fadeUp: Variants = { hidden: { opacity: 0, y: 60 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 50, damping: 20 } } };
@@ -274,6 +275,7 @@ export default function HomePage() {
       <HardwareSection />
       <CTASection />
       <Footer />
+      <ChatbotWidget />
     </div>
   );
 }
