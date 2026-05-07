@@ -102,19 +102,19 @@ export default function ChatbotWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.9, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="mb-4 w-[350px] sm:w-[400px] h-[500px] glass rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 flex flex-col"
+            className="mb-4 w-[350px] sm:w-[400px] h-[500px] bg-[#0a0a0b] rounded-3xl overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.8)] border border-white/10 flex flex-col"
           >
             {/* Header */}
-            <div className="p-4 bg-primary/10 border-b border-white/5 flex items-center justify-between backdrop-blur-xl">
+            <div className="p-5 bg-[#121214] border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                   <Bot className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Assistant CGPR</h3>
+                  <h3 className="font-bold text-sm tracking-tight">Assistant CGPR</h3>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] text-secondary uppercase font-black tracking-widest">En ligne</span>
+                    <span className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#00e5ff]" />
+                    <span className="text-[10px] text-primary uppercase font-black tracking-widest opacity-80">En ligne</span>
                   </div>
                 </div>
               </div>
@@ -127,7 +127,7 @@ export default function ChatbotWidget() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 fitness-scrollbar bg-black/20">
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 fitness-scrollbar bg-[#0a0a0b]">
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
@@ -163,7 +163,7 @@ export default function ChatbotWidget() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white/5 border-t border-white/5">
+            <div className="p-4 bg-[#121214] border-t border-white/5">
               <form 
                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
                 className="relative flex items-center gap-2"
@@ -173,7 +173,7 @@ export default function ChatbotWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Posez votre question..."
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 outline-none focus:border-primary transition-all text-sm"
+                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl py-3 pl-4 pr-12 outline-none focus:border-primary transition-all text-sm text-white placeholder:text-white/20"
                 />
                 <button 
                   type="submit"
