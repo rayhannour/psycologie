@@ -1,8 +1,8 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { BrainCircuit, Mail, Lock, ArrowRight } from 'lucide-react';
+import { BrainCircuit, Mail, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -14,6 +14,17 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // Reset offline bypass state on mount to allow fresh logins
+  useEffect(() => {
+    localStorage.removeItem("offline_mode");
+  }, []);
+
+  const handleOfflineBypass = () => {
+    localStorage.setItem("offline_mode", "true");
+    localStorage.setItem("cgpr_role_mock-offline-id", "doctor"); // Set default role to doctor for testing
+    window.location.href = '/dashboard';
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,9 +189,30 @@ export default function LoginPage() {
           Google
         </motion.button>
 
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/5"></div>
+          </div>
+          <div className="relative flex justify-center text-[10px] uppercase">
+            <span className="bg-background px-3 text-secondary font-bold tracking-widest">Développement Local</span>
+          </div>
+        </div>
+
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleOfflineBypass}
+          className="w-full py-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(0,229,255,0.05)] hover:shadow-[0_0_25px_rgba(0,229,255,0.15)]"
+        >
+          <Sparkles className="w-4 h-4 animate-pulse" />
+          <span>Accéder en Mode Démo Hors-ligne</span>
+        </motion.button>
+
         <p className="text-center text-xs text-secondary mt-8">
           {isRegistering ? 'Déjà un compte ?' : 'Pas encore de compte ?'}{' '}
           <button 
+            type="button"
             onClick={() => setIsRegistering(!isRegistering)}
             className="text-primary hover:underline font-bold"
           >

@@ -51,6 +51,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isOfflineMode = localStorage.getItem("offline_mode") === "true";
+      if (isOfflineMode) {
+        setUser({
+          uid: "mock-offline-id",
+          email: "dr.rayhan@cgpr.gov.tn",
+          displayName: "Dr. Rayhan",
+          emailVerified: true,
+        } as any);
+        const cachedRole = localStorage.getItem("cgpr_role_mock-offline-id") || 'doctor';
+        setRole(cachedRole as 'agent' | 'doctor');
+        setLoading(false);
+        // Skip setting up Firebase listeners if we are strictly offline
+        return;
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       
@@ -74,7 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             applyEmailFallback(firebaseUser);
           }
         } catch (error) {
-          console.error("AuthContext: Firestore error, applying fallback:", error);
+          console.warn("AuthContext: Firestore error, applying fallback:", error);
           applyEmailFallback(firebaseUser);
         }
       }

@@ -16,18 +16,19 @@ import {
   X,
   Video,
   RefreshCw,
-  Mic2
+  Mic2,
+  FileText
 } from 'lucide-react';
 
 // Define all possible items
 const allItems = [
   { icon: LayoutDashboard, label: "Tableau de Bord", href: "/dashboard", roles: ['doctor'] },
-  { icon: Users, label: "Patients", href: "/dashboard/patients", roles: ['doctor'] },
+  { icon: Users, label: "Patients & Triage DCI", href: "/dashboard/patients", roles: ['doctor'] },
+  { icon: FileText, label: "Mon DCI Clinique", href: "/dashboard/dci", roles: ['agent'] },
   { icon: Calendar, label: "Agenda", href: "/dashboard/calendar", roles: ['agent', 'doctor'] },
   { icon: MessageSquare, label: "Assistant IA", href: "/dashboard/sessions", roles: ['agent'] },
   { icon: MessageSquare, label: "Suivi IA", href: "/dashboard/sessions", roles: ['doctor'] },
-  { icon: Video, label: "Assistant Team", href: "/dashboard/teams", roles: ['agent'] },
-  { icon: Video, label: "Séances Teams", href: "/dashboard/teams", roles: ['doctor'] },
+  { icon: Video, label: "Mes Téléconsultations", href: "/dashboard/teams", roles: ['doctor'] },
   { icon: Mic2, label: "Assistant Vocal", href: "/dashboard/elevenlabs", roles: ['agent', 'doctor'] },
   { icon: BrainCircuit, label: "Analyses", href: "/dashboard/analytics", roles: ['doctor'] },
   { icon: Settings, label: "Paramètres", href: "/dashboard/settings", roles: ['doctor'] },
